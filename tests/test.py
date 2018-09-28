@@ -18,7 +18,7 @@ def test_response():
 
     assert response['status'] == 'ok'
     assert len(response['predictions']) > 0
-    assert len(response['predictions'][0]['face_box']) == 1
+    assert len(response['predictions'][0]['face_box']) == 4
     assert len(response['predictions'][0]['age_estimation']) == 1
 
     # Test by the image without faces
