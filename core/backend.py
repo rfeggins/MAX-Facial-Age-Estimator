@@ -91,8 +91,6 @@ class ModelWrapper(object):
             yw1 = max(int(y1 - ad * h), 0)
             xw2 = min(int(x2 + ad * w), img_w - 1)
             yw2 = min(int(y2 + ad * h), img_h - 1)
-            cv2.rectangle(input_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-            # cv2.rectangle(img, (xw1, yw1), (xw2, yw2), (255, 0, 0), 2)
             faces[i, :, :, :] = cv2.resize(input_img[yw1:yw2 + 1, xw1:xw2 + 1, :], (self.img_size, self.img_size))
 
         if len(detected) > 0:
