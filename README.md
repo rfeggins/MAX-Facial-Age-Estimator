@@ -1,4 +1,4 @@
-# IBM Code Model Asset Exchange: Facial Age Estimator
+# IBM Developer Model Asset Exchange: Facial Age Estimator
 
 This repository contains code to instantiate and deploy a facial age estimation model. The model detects faces in an image, extracts facial features for each face detected and finally predicts the age of each face. The model uses a coarse-to-fine strategy to perform multi-class classification and regression for age estimation. The input to the model is an image and the output is a list of estimated ages and bounding box coordinates of each face detected in the image. The format of the bounding box coordinates is `[xmin, ymin, width, height]`.
 

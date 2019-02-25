@@ -1,8 +1,8 @@
-FROM codait/max-base
+FROM codait/max-base:v1.0.0
 
 # Fill in these with a link to the bucket containing the model and the model file name
-ARG model_bucket=http://max-assets.s3-api.us-geo.objectstorage.softlayer.net
-ARG model_file=facial-age-estimator.tar.gz
+ARG model_bucket=http://max-assets.s3-api.us-geo.objectstorage.softlayer.net/facial-age-estimator/1.0
+ARG model_file=assets.tar.gz
 
 RUN wget -nv --show-progress --progress=bar:force:noscroll ${model_bucket}/${model_file} --output-document=/workspace/assets/${model_file}
 RUN tar -x -C assets/ -f assets/${model_file} -v && rm assets/${model_file}
