@@ -44,13 +44,5 @@ def test_predict():
 
     assert json['status'] == "ok"
 
-    assert 55 > json['predictions'][0]['age_estimation'] > 45
-
-    assert 310 > json['predictions'][0]['face_box'][0] > 290
-    assert 180 > json['predictions'][0]['face_box'][1] > 160
-    assert 390 > json['predictions'][0]['face_box'][2] > 370
-    assert 525 > json['predictions'][0]['face_box'][3] > 500
-
-
 if __name__ == '__main__':
     pytest.main([__file__])
