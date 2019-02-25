@@ -24,7 +24,7 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
 
 def read_still_image(still_img):
     image = Image.open(io.BytesIO(still_img))
-    if not image.mode == 'RGB':
+    if image.format == 'PNG':
         image = image.convert('RGB')
     image = np.array(image)
     return image
