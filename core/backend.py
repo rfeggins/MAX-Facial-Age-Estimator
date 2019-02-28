@@ -12,7 +12,6 @@ from PIL import Image
 from keras import backend
 import tensorflow as tf
 global graph
-from flask import abort
 
 logger = logging.getLogger()
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
@@ -22,20 +21,13 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
-def read_still_image(image_data):
-    detector = MTCNN()
-    try:
-        image = Image.open(io.BytesIO(image_data)).convert('RGB')
-        image = np.array(image)
-        detected = detector.detect_faces(image)
-        if len(detected)>0:
-            return image
-        else:
-            abort(400, 'No face was detected in the given image. Please provide an image with faces.')
-    except OSError as e:
-        logger.error(e)
-        abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
 
+def read_still_image(still_img):
+    image = Image.open(io.BytesIO(still_img))
+    if image.format == 'PNG':
+        image = image.convert('RGB')
+    image = np.array(image)
+    return image
 
 
 class ModelWrapper(object):
