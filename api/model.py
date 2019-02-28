@@ -4,7 +4,8 @@ from werkzeug.datastructures import FileStorage
 from config import MODEL_META_DATA
 from core.backend import ModelWrapper, read_still_image
 import numpy as np
-
+import logging
+logger = logging.getLogger()
 
 api = Namespace('model', description='Model information and inference operations')
 
@@ -59,12 +60,13 @@ class Predict(Resource):
         args = input_parser.parse_args()
         input_data = args['image'].read()
         stillimg = read_still_image(input_data)
-        preds = self.model_wrapper.predict(stillimg)
-
-        label_preds=[]
-        for res in preds:
-            label_preds.append({'age_estimation':res[0]['age'],'face_box':res[0]['box']})
-        result['predictions'] = label_preds
-        result['status'] = 'ok'
-
+        try:
+            preds = self.model_wrapper.predict(stillimg)
+            label_preds = []
+            for res in preds:
+                label_preds.append({'age_estimation': res[0]['age'], 'face_box': res[0]['box']})
+            result['predictions'] = label_preds
+            result['status'] = 'ok'
+        except ValueError as e:
+            logger.error(e)
         return result
