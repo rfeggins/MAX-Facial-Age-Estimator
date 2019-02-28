@@ -12,7 +12,7 @@ from PIL import Image
 from keras import backend
 import tensorflow as tf
 global graph
-from flask import abort
+from flask import abort, jsonify
 
 logger = logging.getLogger()
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
@@ -21,6 +21,15 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     x, y = point
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
+
+def make_error(status_code, message, pred):
+    response = jsonify({
+        'status':status_code,
+        'message': message,
+        'prediction': pred
+    })
+    response.status_code = status_code
+    return response
 
 def read_still_image(image_data):
     detector = MTCNN()
@@ -31,7 +40,8 @@ def read_still_image(image_data):
         if len(detected)>0:
             return image
         else:
-            abort(400, 'No face was detected in the given image. Please provide an image with faces.')
+            predmsg=[{'age_estimation': 0, 'face_box': [0, 0, 0, 0]}]
+            make_error(400, 'No face was detected in the given image. Please provide an image with faces.', predmsg)
     except IOError as e:
         logger.error(e)
         abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
