@@ -32,7 +32,7 @@ def test_metadata():
 
 def test_predict():
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'assets/tom_cruise.jpg'
+    file_path = '../assets/tom_cruise.jpg'
 
     with open(file_path, 'rb') as file:
         file_form = {'image': (file_path, file, 'image/jpeg')}
@@ -43,6 +43,13 @@ def test_predict():
     json = r.json()
 
     assert json['status'] == "ok"
+
+    assert 55 > json['predictions'][0]['age_estimation'] > 35
+
+    assert 310 > json['predictions'][0]['face_box'][0] > 290
+    assert 180 > json['predictions'][0]['face_box'][1] > 160
+    assert 390 > json['predictions'][0]['face_box'][2] > 370
+    assert 525 > json['predictions'][0]['face_box'][3] > 500
 
 if __name__ == '__main__':
     pytest.main([__file__])
