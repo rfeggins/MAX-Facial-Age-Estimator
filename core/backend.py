@@ -22,13 +22,6 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
-# def read_still_image(still_img):
-#     image = Image.open(io.BytesIO(still_img))
-#     if image.format == 'PNG':
-#         image = image.convert('RGB')
-#     image = np.array(image)
-#     return image
-
 def read_still_image(image_data):
     detector = MTCNN()
     try:
