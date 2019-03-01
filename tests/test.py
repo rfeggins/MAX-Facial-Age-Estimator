@@ -52,11 +52,11 @@ def test_predict():
     file_path3 = '../assets/non_face.jpg'
     with open(file_path3, 'rb') as file:
         file_form3 = {'image': (file_path3, file, 'image/jpeg')}
-    r = requests.post(url=model_endpoint, files=file_form3)
-    # assert r.status_code == 200
-    # json = r.json()
-    # assert json['status'] == "ok"
-    # assert json['predictions'] ==[]
+        r = requests.post(url=model_endpoint, files=file_form3)
+    assert r.status_code == 200
+    json = r.json()
+    assert json['status'] == "ok"
+    assert json['predictions'] ==[]
 
 if __name__ == '__main__':
     pytest.main([__file__])

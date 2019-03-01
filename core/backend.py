@@ -1,4 +1,3 @@
-
 import logging
 from config import DEFAULT_MODEL_PATH
 import os
@@ -6,13 +5,10 @@ import io
 import cv2
 import numpy as np
 from core.src.SSRNET_model import SSR_net
-import sys
 from mtcnn.mtcnn import MTCNN
 from PIL import Image
-from keras import backend
 import tensorflow as tf
 global graph
-from flask import abort, jsonify
 
 logger = logging.getLogger()
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
@@ -21,26 +17,6 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     x, y = point
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
-
-# detected = detector.detect_faces(image)
-# if len(detected) > 0:
-#
-# else:
-#     predmsg = [{'age_estimation': 0, 'face_box': [0, 0, 0, 0]}]
-#     make_error(400, 'No face was detected in the given image. Please provide an image with faces.', predmsg)
-#
-# except IOError as e:
-# logger.error(e)
-# abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
-
-def make_error(status_code, message, pred):
-    response = jsonify({
-        'status':status_code,
-        'message': message,
-        'prediction': pred
-    })
-    response.status_code = status_code
-    return response
 
 def read_still_image(image_data):
         image = Image.open(io.BytesIO(image_data)).convert('RGB')
@@ -77,10 +53,6 @@ class ModelWrapper(object):
 
     def predict(self, input_img):
         ad = 0.4
-
-        if pyFlag == '3':
-            input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
-
         img_h, img_w, _ = np.shape(input_img)
         input_img = cv2.resize(input_img, (1024, int(1024 * img_h / img_w)))
         img_h, img_w, _ = np.shape(input_img)
