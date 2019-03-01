@@ -99,19 +99,6 @@ class ModelWrapper(MAXModelWrapper):
                 faces[i, :, :, :] = cv2.resize(input_img[yw1:yw2 + 1, xw1:xw2 + 1, :], (self.img_size, self.img_size))
         return (faces, detected)
 
-        # if len(detected) > 0:
-        #     with self.graph.as_default():
-        #         predicted_ages = self.model.predict(faces)
-        #
-        # # prediction results with BBX & AGES
-        # pred_res = []
-        # for i, d in enumerate(detected):
-        #     if d['confidence'] > 0.8:
-        #         pre_age=predicted_ages[i].astype(int)
-        #         pred_res.append([{'box': d['box'], 'age':pre_age}])
-        # return pred_res
-
-
     def _predict(self, pre_x):
         faces=pre_x[0]
         with self.graph.as_default():
@@ -127,4 +114,3 @@ class ModelWrapper(MAXModelWrapper):
                 pre_age = predicted_ages[i].astype(int)
                 pred_res.append([{'box': d['box'], 'age': pre_age}])
         return pred_res
-
