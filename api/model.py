@@ -60,13 +60,16 @@ class Predict(Resource):
         args = input_parser.parse_args()
         input_data = args['image'].read()
         stillimg = read_still_image(input_data)
-        try:
-            preds = self.model_wrapper.predict(stillimg)
+        preds_result = self.model_wrapper.predict(stillimg)
+        preds=preds_result[0]
+        detected_result=preds_result[1]
+        if len(detected_result)==0:
+            result['predictions'] = []
+            result['status'] = 'ok'
+        else:
             label_preds = []
             for res in preds:
                 label_preds.append({'age_estimation': res[0]['age'], 'face_box': res[0]['box']})
             result['predictions'] = label_preds
             result['status'] = 'ok'
-        except ValueError as e:
-            logger.error(e)
         return result

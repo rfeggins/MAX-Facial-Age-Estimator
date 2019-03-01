@@ -22,6 +22,17 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
+# detected = detector.detect_faces(image)
+# if len(detected) > 0:
+#
+# else:
+#     predmsg = [{'age_estimation': 0, 'face_box': [0, 0, 0, 0]}]
+#     make_error(400, 'No face was detected in the given image. Please provide an image with faces.', predmsg)
+#
+# except IOError as e:
+# logger.error(e)
+# abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
+
 def make_error(status_code, message, pred):
     response = jsonify({
         'status':status_code,
@@ -32,19 +43,11 @@ def make_error(status_code, message, pred):
     return response
 
 def read_still_image(image_data):
-    detector = MTCNN()
-    try:
         image = Image.open(io.BytesIO(image_data)).convert('RGB')
+        if not image.mode == 'RGB':
+            image = image.convert('RGB')
         image = np.array(image)
-        detected = detector.detect_faces(image)
-        if len(detected)>0:
-            return image
-        else:
-            predmsg=[{'age_estimation': 0, 'face_box': [0, 0, 0, 0]}]
-            make_error(400, 'No face was detected in the given image. Please provide an image with faces.', predmsg)
-    except IOError as e:
-        logger.error(e)
-        abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
+        return image
 
 class ModelWrapper(object):
     """Model wrapper for SavedModel format"""
@@ -72,19 +75,7 @@ class ModelWrapper(object):
 
         logger.info('Loaded model')
 
-    def predict(self, x):
-        input_img = x
-        # python version
-        pyFlag = ''
-        if len(sys.argv) < 3:
-            pyFlag = '2'  # default to use moviepy to show, this can work on python2.7 and python3.5
-        elif len(sys.argv) == 3:
-            pyFlag = sys.argv[2]  # python version
-        else:
-            print('Wrong input!')
-            sys.exit()
-
-        detected = ''  # make this not local variable
+    def predict(self, input_img):
         ad = 0.4
 
         if pyFlag == '3':
@@ -118,4 +109,4 @@ class ModelWrapper(object):
             if d['confidence'] > 0.8:
                 pre_age=predicted_ages[i].astype(int)
                 pred_res.append([{'box': d['box'], 'age':pre_age}])
-        return pred_res
+        return (pred_res,detected)
