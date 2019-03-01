@@ -4,12 +4,10 @@ import io
 import cv2
 import numpy as np
 from core.src.SSRNET_model import SSR_net
-import sys
 from mtcnn.mtcnn import MTCNN
 from PIL import Image
 from config import DEFAULT_MODEL_PATH
 from maxfw.model import MAXModelWrapper
-
 import tensorflow as tf
 global graph
 
@@ -54,7 +52,6 @@ class ModelWrapper(MAXModelWrapper):
         self.stage_num = [3, 3, 3]
         self.lambda_local = 1
         self.lambda_d = 1
-        self.detector = MTCNN()
 
         # load pre-trained model
         self.model = SSR_net(self.img_size, self.stage_num, self.lambda_local, self.lambda_d)()
@@ -65,21 +62,7 @@ class ModelWrapper(MAXModelWrapper):
         logger.info('Loaded model')
 
     def _pre_process(self, input_img):
-        # # python version
-        # pyFlag = ''
-        # if len(sys.argv) < 3:
-        #     pyFlag = '2'  # default to use moviepy to show, this can work on python2.7 and python3.5
-        # elif len(sys.argv) == 3:
-        #     pyFlag = sys.argv[2]  # python version
-        # else:
-        #     print('Wrong input!')
-        #     sys.exit()
-
-        # if pyFlag == '3':
-        #     input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
-
         ad = 0.4
-        detected = ''  # make this not local variable
         img_h, img_w, _ = np.shape(input_img)
         input_img = cv2.resize(input_img, (1024, int(1024 * img_h / img_w)))
         img_h, img_w, _ = np.shape(input_img)
