@@ -12,7 +12,7 @@ def test_swagger():
 
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Server'
+    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Microservice'
 
 
 def test_metadata():
@@ -41,11 +41,8 @@ def test_predict():
     assert r.status_code == 200
 
     json = r.json()
-
     assert json['status'] == "ok"
-
-    assert 55 > json['predictions'][0]['age_estimation'] > 45
-
+    assert 55 > json['predictions'][0]['age_estimation'] > 35
     assert 310 > json['predictions'][0]['face_box'][0] > 290
     assert 180 > json['predictions'][0]['face_box'][1] > 160
     assert 390 > json['predictions'][0]['face_box'][2] > 370
