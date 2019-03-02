@@ -32,8 +32,8 @@ def test_metadata():
 
 def test_predict():
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path1 = '../assets/tom_cruise.jpg'
-    file_path2 = '../assets/tom_cruise.png'
+    file_path1 = 'assets/tom_cruise.jpg'
+    file_path2 = 'assets/tom_cruise.png'
     filepath=[file_path1, file_path2]
 
     for file_path in filepath:
@@ -49,7 +49,7 @@ def test_predict():
         assert 390 > json['predictions'][0]['face_box'][2] > 370
         assert 525 > json['predictions'][0]['face_box'][3] > 500
 
-    file_path3 = '../assets/non_face.jpg'
+    file_path3 = 'assets/non_face.jpg'
     with open(file_path3, 'rb') as file:
         file_form3 = {'image': (file_path3, file, 'image/jpeg')}
         r = requests.post(url=model_endpoint, files=file_form3)

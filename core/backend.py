@@ -81,4 +81,4 @@ class ModelWrapper(object):
             if d['confidence'] > 0.8:
                 pre_age=predicted_ages[i].astype(int)
                 pred_res.append([{'box': d['box'], 'age':pre_age}])
-        return (pred_res,detected)
+        return pred_res
