@@ -1,8 +1,8 @@
+from maxfw.core import MAX_API, PredictAPI
 from core.model import ModelWrapper, read_still_image
 from flask_restplus import fields
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import BadRequest
-from maxfw.core import MAX_API, PredictAPI
 
 input_parser = MAX_API.parser()
 # Example parser for file input
