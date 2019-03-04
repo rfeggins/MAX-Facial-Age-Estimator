@@ -19,7 +19,7 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
 def read_still_image(image_data):
-        image = Image.open(io.BytesIO(image_data)).convert('RGB')
+        image = Image.open(io.BytesIO(image_data))
         if not image.mode == 'RGB':
             image = image.convert('RGB')
         image = np.array(image)
@@ -61,7 +61,7 @@ class ModelWrapper(object):
         faces = np.empty((len(detected), self.img_size, self.img_size, 3))
 
         for i, d in enumerate(detected):
-            if d['confidence'] > 0.95:
+            if d['confidence'] > 0.85:
                 x1, y1, w, h = d['box']
                 x2 = x1 + w
                 y2 = y1 + h
@@ -78,7 +78,7 @@ class ModelWrapper(object):
         # prediction results with BBX & AGES
         pred_res = []
         for i, d in enumerate(detected):
-            if d['confidence'] > 0.8:
+            if d['confidence'] > 0.85:
                 pre_age=predicted_ages[i].astype(int)
                 pred_res.append([{'box': d['box'], 'age':pre_age}])
         return pred_res
