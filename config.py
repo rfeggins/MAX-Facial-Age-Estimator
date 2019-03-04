@@ -21,5 +21,6 @@ MODEL_META_DATA = {
     'name': 'SSR-Net Facial Age Estimator Model',
     'description': 'SSR-Net Facial Recognition and Age Prediction model; trained using Keras on the IMDB-WIKI dataset',
     'type': 'facial-recognition',
+    'source': 'https://developer.ibm.com/exchanges/models/all/max-facial-age-estimator/',
     'license': '{}'.format(MODEL_LICENSE)
 }
