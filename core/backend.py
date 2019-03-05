@@ -9,6 +9,7 @@ from mtcnn.mtcnn import MTCNN
 from PIL import Image
 import tensorflow as tf
 global graph
+from flask import abort
 
 logger = logging.getLogger()
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
@@ -19,11 +20,15 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
 def read_still_image(image_data):
+    try:
         image = Image.open(io.BytesIO(image_data))
         if not image.mode == 'RGB':
             image = image.convert('RGB')
         image = np.array(image)
         return image
+    except IOError as e:
+        logger.error(e)
+        abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
 
 class ModelWrapper(object):
     """Model wrapper for SavedModel format"""

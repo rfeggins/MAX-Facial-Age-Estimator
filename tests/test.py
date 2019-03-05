@@ -3,9 +3,7 @@ import requests
 
 
 def test_swagger():
-
     model_endpoint = 'http://localhost:5000/swagger.json'
-
     r = requests.get(url=model_endpoint)
     assert r.status_code == 200
     assert r.headers['Content-Type'] == 'application/json'
@@ -14,11 +12,8 @@ def test_swagger():
     assert 'swagger' in json
     assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Server'
 
-
 def test_metadata():
-
     model_endpoint = 'http://localhost:5000/model/metadata'
-
     r = requests.get(url=model_endpoint)
     assert r.status_code == 200
 
@@ -57,6 +52,13 @@ def test_predict():
     json = r.json()
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
+
+    file_path = 'non_image.txt'
+    with open(file_path,'rb') as file:
+        file_form = {'text': (file_path, file, 'text/plain')}
+        r = requests.post(url=model_endpoint, files=file_form)
+    assert r.status_code == 400
+
 
 if __name__ == '__main__':
     pytest.main([__file__])
