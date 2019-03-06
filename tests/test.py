@@ -10,7 +10,7 @@ def test_swagger():
 
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Server'
+    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Microservice'
 
 def test_metadata():
     model_endpoint = 'http://localhost:5000/model/metadata'
@@ -44,7 +44,7 @@ def test_predict():
         assert 390 > json['predictions'][0]['face_box'][2] > 370
         assert 525 > json['predictions'][0]['face_box'][3] > 500
 
-    file_path3 = 'assets/non_face.jpg'
+    file_path3 = 'tests/non_face.jpg'
     with open(file_path3, 'rb') as file:
         file_form3 = {'image': (file_path3, file, 'image/jpeg')}
         r = requests.post(url=model_endpoint, files=file_form3)
@@ -53,12 +53,11 @@ def test_predict():
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
 
-    file_path = 'non_image.txt'
+    file_path = 'README.md'
     with open(file_path,'rb') as file:
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
-
 
 if __name__ == '__main__':
     pytest.main([__file__])
