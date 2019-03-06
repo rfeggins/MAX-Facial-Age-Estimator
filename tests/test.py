@@ -25,24 +25,28 @@ def test_metadata():
     assert metadata['license'] == 'MIT'
 
 
+def _check_response(r):
+    assert r.status_code == 200
+    json = r.json()
+    assert json['status'] == "ok"
+    assert 55 > json['predictions'][0]['age_estimation'] > 35
+    assert 310 > json['predictions'][0]['face_box'][0] > 290
+    assert 180 > json['predictions'][0]['face_box'][1] > 160
+    assert 390 > json['predictions'][0]['face_box'][2] > 370
+    assert 525 > json['predictions'][0]['face_box'][3] > 500
+
+
 def test_predict():
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path1 = 'assets/tom_cruise.jpg'
-    file_path2 = 'assets/tom_cruise.png'
-    filepath=[file_path1, file_path2]
+    formats = ['jpg', 'png', 'tiff']
+    file_path = 'tests/tom_cruise.{}'
 
-    for file_path in filepath:
-        with open(file_path, 'rb') as file:
-            file_form = {'image': (file_path, file, 'image/jpeg')}
+    for f in formats:
+        p = file_path.format(f)
+        with open(p, 'rb') as file:
+            file_form = {'image': (p, file, 'image/{}'.format(f))}
             r = requests.post(url=model_endpoint, files=file_form)
-        assert r.status_code == 200
-        json = r.json()
-        assert json['status'] == "ok"
-        assert 55 > json['predictions'][0]['age_estimation'] > 35
-        assert 310 > json['predictions'][0]['face_box'][0] > 290
-        assert 180 > json['predictions'][0]['face_box'][1] > 160
-        assert 390 > json['predictions'][0]['face_box'][2] > 370
-        assert 525 > json['predictions'][0]['face_box'][3] > 500
+        _check_response(r)
 
     file_path3 = 'tests/non_face.jpg'
     with open(file_path3, 'rb') as file:
