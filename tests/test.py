@@ -5,9 +5,9 @@ import requests
 def test_swagger():
     model_endpoint = 'http://localhost:5000/swagger.json'
     r = requests.get(url=model_endpoint)
+
     assert r.status_code == 200
     assert r.headers['Content-Type'] == 'application/json'
-
     json = r.json()
     assert 'swagger' in json
     assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Microservice'
