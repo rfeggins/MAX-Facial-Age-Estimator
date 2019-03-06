@@ -10,9 +10,9 @@ from config import DEFAULT_MODEL_PATH
 from maxfw.model import MAXModelWrapper
 import tensorflow as tf
 global graph
+from flask import abort
 
 logger = logging.getLogger()
-
 
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
                font_scale=1, thickness=2):
@@ -21,12 +21,16 @@ def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
     cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
     cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
 
-
-def read_still_image(still_img):
-    image = Image.open(io.BytesIO(still_img)).convert('RGB')
-    image = np.array(image)
-    return image
-
+def read_still_image(image_data):
+    try:
+        image = Image.open(io.BytesIO(image_data))
+        if not image.mode == 'RGB':
+            image = image.convert('RGB')
+        image = np.array(image)
+        return image
+    except IOError as e:
+        logger.error(e)
+        abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
 
 class ModelWrapper(MAXModelWrapper):
     MODEL_META_DATA = {
@@ -71,7 +75,7 @@ class ModelWrapper(MAXModelWrapper):
         faces = np.empty((len(detected), self.img_size, self.img_size, 3))
 
         for i, d in enumerate(detected):
-            if d['confidence'] > 0.95:
+            if d['confidence'] > 0.85:
                 x1, y1, w, h = d['box']
                 x2 = x1 + w
                 y2 = y1 + h
@@ -93,7 +97,7 @@ class ModelWrapper(MAXModelWrapper):
         detected=post_rst[1]
         pred_res = []
         for i, d in enumerate(detected):
-            if d['confidence'] > 0.8:
-                pre_age = predicted_ages[i].astype(int)
-                pred_res.append([{'box': d['box'], 'age': pre_age}])
+            if d['confidence'] > 0.85:
+                pre_age=predicted_ages[i].astype(int)
+                pred_res.append([{'box': d['box'], 'age':pre_age}])
         return pred_res

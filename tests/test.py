@@ -3,9 +3,7 @@ import requests
 
 
 def test_swagger():
-
     model_endpoint = 'http://localhost:5000/swagger.json'
-
     r = requests.get(url=model_endpoint)
 
     assert r.status_code == 200
@@ -27,16 +25,8 @@ def test_metadata():
     assert metadata['license'] == 'MIT'
 
 
-def test_predict():
-    model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'assets/tom_cruise.jpg'
-
-    with open(file_path, 'rb') as file:
-        file_form = {'image': (file_path, file, 'image/jpeg')}
-        r = requests.post(url=model_endpoint, files=file_form)
-
+def _check_response(r):
     assert r.status_code == 200
-
     json = r.json()
     assert json['status'] == "ok"
     assert 55 > json['predictions'][0]['age_estimation'] > 35
@@ -45,6 +35,33 @@ def test_predict():
     assert 390 > json['predictions'][0]['face_box'][2] > 370
     assert 525 > json['predictions'][0]['face_box'][3] > 500
 
+
+def test_predict():
+    model_endpoint = 'http://localhost:5000/model/predict'
+    formats = ['jpg', 'png', 'tiff']
+    file_path = 'tests/tom_cruise.{}'
+
+    for f in formats:
+        p = file_path.format(f)
+        with open(p, 'rb') as file:
+            file_form = {'image': (p, file, 'image/{}'.format(f))}
+            r = requests.post(url=model_endpoint, files=file_form)
+        _check_response(r)
+
+    file_path3 = 'tests/non_face.jpg'
+    with open(file_path3, 'rb') as file:
+        file_form3 = {'image': (file_path3, file, 'image/jpeg')}
+        r = requests.post(url=model_endpoint, files=file_form3)
+    assert r.status_code == 200
+    json = r.json()
+    assert json['status'] == "ok"
+    assert json['predictions'] ==[]
+
+    file_path = 'README.md'
+    with open(file_path,'rb') as file:
+        file_form = {'text': (file_path, file, 'text/plain')}
+        r = requests.post(url=model_endpoint, files=file_form)
+    assert r.status_code == 400
 
 if __name__ == '__main__':
     pytest.main([__file__])

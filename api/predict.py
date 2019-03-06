@@ -8,19 +8,15 @@ input_parser = MAX_API.parser()
 # Example parser for file input
 input_parser.add_argument('image', type=FileStorage, location='files', required=True)
 
-
 label_prediction = MAX_API.model('LabelPrediction', {
     'age_estimation': fields.Integer(required=True, description='Estimated age for the face'),
     'face_box': fields.List(fields.Integer(required=True), description='Bounding box coordinates for the face')
 })
 
-
 predict_response = MAX_API.model('ModelPredictResponse', {
     'status': fields.String(required=True, description='Response status message'),
     'predictions': fields.List(fields.Nested(label_prediction), description='Predicted age and bounding box for each detected face')
 })
-
-
 
 class ModelPredictAPI(PredictAPI):
 
@@ -43,5 +39,4 @@ class ModelPredictAPI(PredictAPI):
             label_preds.append({'age_estimation':res[0]['age'],'face_box':res[0]['box']})
         result['predictions'] = label_preds
         result['status'] = 'ok'
-
         return result
