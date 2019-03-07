@@ -8,7 +8,7 @@ RESTPLUS_MASK_SWAGGER = False
 
 # API metadata
 API_TITLE = 'MAX Facial Age Estimator'
-API_DESC = 'An API for serving models'
+API_DESC = 'Recognize faces in an image and estimate the age of each face.'
 API_VERSION = '0.1'
 
 # default model
