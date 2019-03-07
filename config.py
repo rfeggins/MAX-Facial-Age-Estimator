@@ -7,7 +7,7 @@ RESTPLUS_MASK_SWAGGER = False
 # Application settings
 
 # API metadata
-API_TITLE = 'Model Asset Exchange Microservice'
+API_TITLE = 'MAX Facial Age Estimator'
 API_DESC = 'An API for serving models'
 API_VERSION = '0.1'
 
