@@ -6,7 +6,7 @@ from werkzeug.exceptions import BadRequest
 
 input_parser = MAX_API.parser()
 # Example parser for file input
-input_parser.add_argument('image', type=FileStorage, location='files', required=True)
+input_parser.add_argument('image', type=FileStorage, location='files', required=True, help='An image encoded as JPEG, PNG, or TIFF')
 
 label_prediction = MAX_API.model('LabelPrediction', {
     'age_estimation': fields.Integer(required=True, description='Estimated age for the face'),

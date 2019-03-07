@@ -10,7 +10,7 @@ def test_swagger():
     assert r.headers['Content-Type'] == 'application/json'
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Microservice'
+    assert json.get('info') and json.get('info').get('title') == 'MAX Facial Age Estimator'
 
 def test_metadata():
     model_endpoint = 'http://localhost:5000/model/metadata'

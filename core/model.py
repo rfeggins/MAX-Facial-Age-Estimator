@@ -37,7 +37,8 @@ class ModelWrapper(MAXModelWrapper):
         'id': 'ssrnet',
         'name': 'SSR-Net Facial Age Estimator Model',
         'description': 'SSR-Net Facial Recognition and Age Prediction model; trained using Keras on the IMDB-WIKI dataset',
-        'type': 'facial-recognition',
+        'type': 'Facial Recognition',
+        'source': 'https://developer.ibm.com/exchanges/models/all/max-facial-age-estimator/',
         'license': 'MIT'
     }
 
