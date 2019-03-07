@@ -7,9 +7,9 @@ RESTPLUS_MASK_SWAGGER = False
 # Application settings
 
 # API metadata
-API_TITLE = 'Model Asset Exchange Server'
-API_DESC = 'An API for serving models'
-API_VERSION = '0.1'
+API_TITLE = 'MAX Facial Age Estimator'
+API_DESC = 'Recognize faces in an image and estimate the age of each face.'
+API_VERSION = '1.1.0'
 
 # default model
 MODELNAME = 'ssrnet_3_3_3_64_1.0_1.0.h5'
@@ -21,5 +21,6 @@ MODEL_META_DATA = {
     'name': 'SSR-Net Facial Age Estimator Model',
     'description': 'SSR-Net Facial Recognition and Age Prediction model; trained using Keras on the IMDB-WIKI dataset',
     'type': 'facial-recognition',
+    'source': 'https://developer.ibm.com/exchanges/models/all/max-facial-age-estimator/',
     'license': '{}'.format(MODEL_LICENSE)
 }

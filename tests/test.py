@@ -5,12 +5,12 @@ import requests
 def test_swagger():
     model_endpoint = 'http://localhost:5000/swagger.json'
     r = requests.get(url=model_endpoint)
+
     assert r.status_code == 200
     assert r.headers['Content-Type'] == 'application/json'
-
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Server'
+    assert json.get('info') and json.get('info').get('title') == 'MAX Facial Age Estimator'
 
 def test_metadata():
     model_endpoint = 'http://localhost:5000/model/metadata'
@@ -62,7 +62,6 @@ def test_predict():
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
-
 
 if __name__ == '__main__':
     pytest.main([__file__])

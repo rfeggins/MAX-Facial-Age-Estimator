@@ -1,5 +1,4 @@
 import logging
-from config import DEFAULT_MODEL_PATH
 import os
 import io
 import cv2
@@ -7,11 +6,14 @@ import numpy as np
 from core.src.SSRNET_model import SSR_net
 from mtcnn.mtcnn import MTCNN
 from PIL import Image
+from config import DEFAULT_MODEL_PATH
+from maxfw.model import MAXModelWrapper
 import tensorflow as tf
 global graph
 from flask import abort
 
 logger = logging.getLogger()
+
 def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
                font_scale=1, thickness=2):
     size = cv2.getTextSize(label, font, font_scale, thickness)[0]
@@ -30,8 +32,15 @@ def read_still_image(image_data):
         logger.error(e)
         abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
 
-class ModelWrapper(object):
-    """Model wrapper for SavedModel format"""
+class ModelWrapper(MAXModelWrapper):
+    MODEL_META_DATA = {
+        'id': 'ssrnet',
+        'name': 'SSR-Net Facial Age Estimator Model',
+        'description': 'SSR-Net Facial Recognition and Age Prediction model; trained using Keras on the IMDB-WIKI dataset',
+        'type': 'Facial Recognition',
+        'license': 'MIT'
+    }
+
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
 
@@ -56,7 +65,7 @@ class ModelWrapper(object):
 
         logger.info('Loaded model')
 
-    def predict(self, input_img):
+    def _pre_process(self, input_img):
         ad = 0.4
         img_h, img_w, _ = np.shape(input_img)
         input_img = cv2.resize(input_img, (1024, int(1024 * img_h / img_w)))
@@ -75,12 +84,17 @@ class ModelWrapper(object):
                 xw2 = min(int(x2 + ad * w), img_w - 1)
                 yw2 = min(int(y2 + ad * h), img_h - 1)
                 faces[i, :, :, :] = cv2.resize(input_img[yw1:yw2 + 1, xw1:xw2 + 1, :], (self.img_size, self.img_size))
+        return (faces, detected)
 
-        if len(detected) > 0:
-            with self.graph.as_default():
-                predicted_ages = self.model.predict(faces)
+    def _predict(self, pre_x):
+        faces=pre_x[0]
+        with self.graph.as_default():
+            predicted_ages = self.model.predict(faces)
+        return (predicted_ages,pre_x[1])
 
-        # prediction results with BBX & AGES
+    def _post_process(self,post_rst):
+        predicted_ages=post_rst[0]
+        detected=post_rst[1]
         pred_res = []
         for i, d in enumerate(detected):
             if d['confidence'] > 0.85:
