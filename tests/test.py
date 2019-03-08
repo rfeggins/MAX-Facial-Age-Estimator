@@ -1,6 +1,6 @@
 import pytest
 import requests
-from core import model
+from core.model import img_resize
 import glob
 from PIL import Image
 import numpy as np
@@ -77,7 +77,7 @@ def test_img_resize():
             image = Image.open(resize_path[i])
             image = np.array(image)
             input_img_h, input_img_w, _ = np.shape(image)
-            input_img, ratio = model.img_resize(image, ratio=1)
+            input_img, ratio = img_resize(image, ratio=1)
             resize_img_h, resize_img_w, _ = np.shape(input_img)
             assert 3 > input_img_h - int(resize_img_h / ratio) >= 0
             assert 3 > input_img_w - int(resize_img_w / ratio) >= 0
