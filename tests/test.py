@@ -61,7 +61,7 @@ def test_predict():
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
 
-    file_path = '../README.md'
+    file_path = 'README.md'
     with open(file_path,'rb') as file:
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
