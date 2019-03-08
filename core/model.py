@@ -32,7 +32,7 @@ def read_still_image(image_data):
         logger.error(e)
         abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
 
-def img_resize(input_data):
+def img_resize(input_data, ratio):
     img_h, img_w, _ = np.shape(input_data)
     if img_w > 1024:
         ratio=1024/img_w
@@ -78,12 +78,10 @@ class ModelWrapper(MAXModelWrapper):
 
     def _pre_process(self, input_img):
         ad = 0.4
-        ratio=1
         img_h, img_w, _ = np.shape(input_img)
 
-        # if image size > 1024 then resize
-        if img_h > 1024 or img_w > 1024:
-            input_img, ratio =img_resize(input_img)
+        # check image w/h > 1024
+        input_img, ratio =img_resize(input_img, ratio=1)
 
         img_h, img_w, _ = np.shape(input_img)
         detected = self.detector.detect_faces(input_img)

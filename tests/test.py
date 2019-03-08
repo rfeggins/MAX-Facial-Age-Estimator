@@ -1,5 +1,9 @@
 import pytest
 import requests
+from core.model import img_resize
+import glob
+from PIL import Image
+import numpy as np
 
 
 def test_swagger():
@@ -30,16 +34,16 @@ def _check_response(r):
     json = r.json()
     assert json['status'] == "ok"
     assert 55 > json['predictions'][0]['age_estimation'] > 35
-    assert 310 > json['predictions'][0]['face_box'][0] > 290
-    assert 180 > json['predictions'][0]['face_box'][1] > 160
-    assert 390 > json['predictions'][0]['face_box'][2] > 370
-    assert 525 > json['predictions'][0]['face_box'][3] > 500
+    assert 575 > json['predictions'][0]['face_box'][0] > 560
+    assert 335 > json['predictions'][0]['face_box'][1] > 320
+    assert 720 > json['predictions'][0]['face_box'][2] > 700
+    assert 975 > json['predictions'][0]['face_box'][3] > 960
 
 
 def test_predict():
     model_endpoint = 'http://localhost:5000/model/predict'
     formats = ['jpg', 'png', 'tiff']
-    file_path = 'tests/tom_cruise.{}'
+    file_path = 'tom_cruise.{}'
 
     for f in formats:
         p = file_path.format(f)
@@ -48,7 +52,7 @@ def test_predict():
             r = requests.post(url=model_endpoint, files=file_form)
         _check_response(r)
 
-    file_path3 = 'tests/non_face.jpg'
+    file_path3 = 'non_face.jpg'
     with open(file_path3, 'rb') as file:
         file_form3 = {'image': (file_path3, file, 'image/jpeg')}
         r = requests.post(url=model_endpoint, files=file_form3)
@@ -57,11 +61,26 @@ def test_predict():
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
 
-    file_path = 'README.md'
+    file_path = '../README.md'
     with open(file_path,'rb') as file:
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
+
+def test_img_resize():
+        """
+        The image resize test.
+        """
+
+        resize_path = glob.glob("resize_*.jpg")
+        for i in range (len(resize_path)):
+            image = Image.open(resize_path[i])
+            image = np.array(image)
+            input_img_h, input_img_w, _ = np.shape(image)
+            input_img, ratio = img_resize(image, ratio=1)
+            resize_img_h, resize_img_w, _ = np.shape(input_img)
+            assert 3 > input_img_h - int(resize_img_h / ratio) >= 0
+            assert 3 > input_img_w - int(resize_img_w / ratio) >= 0
 
 if __name__ == '__main__':
     pytest.main([__file__])
