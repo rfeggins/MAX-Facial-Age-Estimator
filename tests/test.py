@@ -1,6 +1,6 @@
 import pytest
 import requests
-from core.model import img_resize
+import cv2
 import glob
 from PIL import Image
 import numpy as np
@@ -61,11 +61,22 @@ def test_predict():
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
 
-    file_path = 'README.md'
+    file_path = '../README.md'
     with open(file_path,'rb') as file:
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
+
+
+def _img_resize(input_data, ratio):
+    img_h, img_w, _ = np.shape(input_data)
+    if img_w > 1024:
+        ratio=1024/img_w
+        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
+    elif img_h > 1024:
+        ratio = 1024/img_h
+        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
+    return input_data, ratio
 
 def test_img_resize():
         """
@@ -77,7 +88,7 @@ def test_img_resize():
             image = Image.open(resize_path[i])
             image = np.array(image)
             input_img_h, input_img_w, _ = np.shape(image)
-            input_img, ratio = img_resize(image, ratio=1)
+            input_img, ratio = _img_resize(image, ratio=1)
             resize_img_h, resize_img_w, _ = np.shape(input_img)
             assert 3 > input_img_h - int(resize_img_h / ratio) >= 0
             assert 3 > input_img_w - int(resize_img_w / ratio) >= 0
