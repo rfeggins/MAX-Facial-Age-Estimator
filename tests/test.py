@@ -1,7 +1,6 @@
 import pytest
 import requests
 import os
-import glob
 from PIL import Image
 import numpy as np
 from core.util import img_resize
