@@ -1,5 +1,6 @@
 import pytest
 import requests
+import os
 import glob
 from PIL import Image
 import numpy as np
@@ -72,7 +73,11 @@ def test_img_resize():
         The image resize test.
         """
 
-        resize_path = glob.glob("resize_*.jpg")
+        resize_path=[]
+        for file in os.listdir("."):
+            if file.startswith("resize_"):
+                resize_path.append(file)
+
         for i in range (len(resize_path)):
             image = Image.open(resize_path[i])
             image = np.array(image)
