@@ -9,6 +9,6 @@ install:
   - sleep 10
 before_script:
   - pip install pytest requests
-  - pip install pytest requests cv2 numpy glob
+  - pip install pytest requests opencv-python numpy glob
 script:
 - pytest tests/test.py
