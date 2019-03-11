@@ -6,6 +6,7 @@ services:
 install:
   - docker build -t max-facial-age-estimator .
   - docker run -it -d -p 5000:5000 max-facial-age-estimator
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)/core
   - sleep 10
 before_script:
   - pip install pytest requests opencv-python numpy Pillow
