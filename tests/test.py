@@ -73,9 +73,9 @@ def test_img_resize():
         """
 
         resize_path=[]
-        for file in os.listdir("."):
+        for file in os.listdir("tests/"):
             if file.startswith("resize_"):
-                resize_path.append(file)
+                resize_path.append("tests/"+ file)
 
         for i in range (len(resize_path)):
             image = Image.open(resize_path[i])
