@@ -4,6 +4,7 @@ import io
 import cv2
 import numpy as np
 from core.src.SSRNET_model import SSR_net
+from core.util import img_resize
 from mtcnn.mtcnn import MTCNN
 from PIL import Image
 from config import DEFAULT_MODEL_PATH
@@ -31,17 +32,6 @@ def read_still_image(image_data):
     except IOError as e:
         logger.error(e)
         abort(400, 'Invalid file type/extension. Please provide a valid image (supported formats: JPEG, PNG, TIFF).')
-
-def img_resize(input_data, ratio):
-    img_h, img_w, _ = np.shape(input_data)
-    if img_w > 1024:
-        ratio=1024/img_w
-        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
-    elif img_h > 1024:
-        ratio = 1024/img_h
-        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
-    return input_data, ratio
-
 
 class ModelWrapper(MAXModelWrapper):
     MODEL_META_DATA = {
@@ -81,7 +71,7 @@ class ModelWrapper(MAXModelWrapper):
         img_h, img_w, _ = np.shape(input_img)
 
         # check image w/h > 1024
-        input_img, ratio =img_resize(input_img, ratio=1)
+        input_img, ratio =img_resize(input_img)
 
         img_h, img_w, _ = np.shape(input_img)
         detected = self.detector.detect_faces(input_img)

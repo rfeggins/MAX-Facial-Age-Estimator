@@ -1,9 +1,9 @@
 import pytest
 import requests
-import cv2
 import glob
 from PIL import Image
 import numpy as np
+from core.util import img_resize
 
 
 def test_swagger():
@@ -43,7 +43,7 @@ def _check_response(r):
 def test_predict():
     model_endpoint = 'http://localhost:5000/model/predict'
     formats = ['jpg', 'png', 'tiff']
-    file_path = 'tom_cruise.{}'
+    file_path = 'tests/tom_cruise.{}'
 
     for f in formats:
         p = file_path.format(f)
@@ -52,7 +52,7 @@ def test_predict():
             r = requests.post(url=model_endpoint, files=file_form)
         _check_response(r)
 
-    file_path3 = 'non_face.jpg'
+    file_path3 = 'tests/non_face.jpg'
     with open(file_path3, 'rb') as file:
         file_form3 = {'image': (file_path3, file, 'image/jpeg')}
         r = requests.post(url=model_endpoint, files=file_form3)
@@ -61,22 +61,11 @@ def test_predict():
     assert json['status'] == "ok"
     assert json['predictions'] ==[]
 
-    file_path = '../README.md'
+    file_path = 'README.md'
     with open(file_path,'rb') as file:
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
-
-
-def _img_resize(input_data, ratio):
-    img_h, img_w, _ = np.shape(input_data)
-    if img_w > 1024:
-        ratio=1024/img_w
-        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
-    elif img_h > 1024:
-        ratio = 1024/img_h
-        input_data=cv2.resize(input_data, (int(ratio*img_w), int(ratio*img_h)))
-    return input_data, ratio
 
 def test_img_resize():
         """
@@ -87,9 +76,9 @@ def test_img_resize():
         for i in range (len(resize_path)):
             image = Image.open(resize_path[i])
             image = np.array(image)
-            input_img_h, input_img_w, _ = np.shape(image)
-            input_img, ratio = _img_resize(image, ratio=1)
-            resize_img_h, resize_img_w, _ = np.shape(input_img)
+            input_img_h, input_img_w, _ = image.shape
+            input_img, ratio = img_resize(image)
+            resize_img_h, resize_img_w, _ = input_img.shape
             assert 3 > input_img_h - int(resize_img_h / ratio) >= 0
             assert 3 > input_img_w - int(resize_img_w / ratio) >= 0
 
