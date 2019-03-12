@@ -1,5 +1,9 @@
 import pytest
 import requests
+import os
+from PIL import Image
+import numpy as np
+from core.util import img_resize
 
 
 def test_swagger():
@@ -30,10 +34,10 @@ def _check_response(r):
     json = r.json()
     assert json['status'] == "ok"
     assert 55 > json['predictions'][0]['age_estimation'] > 35
-    assert 310 > json['predictions'][0]['face_box'][0] > 290
-    assert 180 > json['predictions'][0]['face_box'][1] > 160
-    assert 390 > json['predictions'][0]['face_box'][2] > 370
-    assert 525 > json['predictions'][0]['face_box'][3] > 500
+    assert 575 > json['predictions'][0]['face_box'][0] > 560
+    assert 335 > json['predictions'][0]['face_box'][1] > 320
+    assert 720 > json['predictions'][0]['face_box'][2] > 700
+    assert 975 > json['predictions'][0]['face_box'][3] > 960
 
 
 def test_predict():
@@ -62,6 +66,25 @@ def test_predict():
         file_form = {'text': (file_path, file, 'text/plain')}
         r = requests.post(url=model_endpoint, files=file_form)
     assert r.status_code == 400
+
+def test_img_resize():
+        """
+        The image resize test.
+        """
+
+        resize_path=[]
+        for file in os.listdir("tests/"):
+            if file.startswith("resize_"):
+                resize_path.append("tests/"+ file)
+
+        for i in range (len(resize_path)):
+            image = Image.open(resize_path[i])
+            image = np.array(image)
+            input_img_h, input_img_w, _ = image.shape
+            input_img, ratio = img_resize(image)
+            resize_img_h, resize_img_w, _ = input_img.shape
+            assert 3 > input_img_h - int(resize_img_h / ratio) >= 0
+            assert 3 > input_img_w - int(resize_img_w / ratio) >= 0
 
 if __name__ == '__main__':
     pytest.main([__file__])

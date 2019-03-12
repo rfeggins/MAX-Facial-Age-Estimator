@@ -15,12 +15,3 @@ API_VERSION = '1.1.0'
 MODELNAME = 'ssrnet_3_3_3_64_1.0_1.0.h5'
 DEFAULT_MODEL_PATH = 'assets/{}'.format(MODELNAME)
 MODEL_LICENSE = 'MIT'
-
-MODEL_META_DATA = {
-    'id': 'ssrnet',
-    'name': 'SSR-Net Facial Age Estimator Model',
-    'description': 'SSR-Net Facial Recognition and Age Prediction model; trained using Keras on the IMDB-WIKI dataset',
-    'type': 'facial-recognition',
-    'source': 'https://developer.ibm.com/exchanges/models/all/max-facial-age-estimator/',
-    'license': '{}'.format(MODEL_LICENSE)
-}
