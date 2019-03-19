@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/IBM/MAX-Facial-Age-Estimator.svg?branch=master)](https://travis-ci.com/IBM/MAX-Facial-Age-Estimator) [![Website Status](https://img.shields.io/website/http/max-facial-age-estimator.max.us-south.containers.appdomain.cloud/swagger.json.svg?label=api+demo)](http://max-facial-age-estimator.max.us-south.containers.appdomain.cloud/)
+
 # IBM Developer Model Asset Exchange: Facial Age Estimator
 
 This repository contains code to instantiate and deploy a facial age estimation model. The model detects faces in an image, extracts facial features for each face detected and finally predicts the age of each face. The model uses a coarse-to-fine strategy to perform multi-class classification and regression for age estimation. The input to the model is an image and the output is a list of estimated ages and bounding box coordinates of each face detected in the image. The format of the bounding box coordinates is `[xmin, ymin, width, height]`.
