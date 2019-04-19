@@ -71,7 +71,7 @@ class ModelWrapper(MAXModelWrapper):
         img_h, img_w, _ = np.shape(input_img)
 
         # check image w/h > 1024
-        input_img, ratio =img_resize(input_img)
+        input_img =img_resize(input_img)
 
         img_h, img_w, _ = np.shape(input_img)
         detected = self.detector.detect_faces(input_img)
@@ -82,18 +82,20 @@ class ModelWrapper(MAXModelWrapper):
                 x1, y1, w, h = d['box']
                 x2 = x1 + w
                 y2 = y1 + h
+                # Normalized bbx coordinates
+                d['box'] = [float(x1) / img_w, float(y1) / img_h, float(x2) / img_w, float(y2) / img_h]
                 xw1 = max(int(x1 - ad * w), 0)
                 yw1 = max(int(y1 - ad * h), 0)
                 xw2 = min(int(x2 + ad * w), img_w - 1)
                 yw2 = min(int(y2 + ad * h), img_h - 1)
                 faces[i, :, :, :] = cv2.resize(input_img[yw1:yw2 + 1, xw1:xw2 + 1, :], (self.img_size, self.img_size))
-        return (faces, detected, ratio)
+        return (faces, detected)
 
     def _predict(self, pre_x):
         faces=pre_x[0]
         with self.graph.as_default():
             predicted_ages = self.model.predict(faces)
-        return (predicted_ages,pre_x[1], pre_x[2])
+        return (predicted_ages,pre_x[1])
 
     def _post_process(self,post_rst):
         predicted_ages=post_rst[0]
@@ -103,8 +105,5 @@ class ModelWrapper(MAXModelWrapper):
         for i, d in enumerate(detected):
             if d['confidence'] > 0.85:
                 pre_age=predicted_ages[i].astype(int)
-                if ratio!=1:
-                    ratio_box = [ int(x/ratio) for x in d['box']]
-                    d['box']=ratio_box
                 pred_res.append([{'box': d['box'], 'age':pre_age}])
         return pred_res

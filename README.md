@@ -2,7 +2,7 @@
 
 # IBM Developer Model Asset Exchange: Facial Age Estimator
 
-This repository contains code to instantiate and deploy a facial age estimation model. The model detects faces in an image, extracts facial features for each face detected and finally predicts the age of each face. The model uses a coarse-to-fine strategy to perform multi-class classification and regression for age estimation. The input to the model is an image and the output is a list of estimated ages and bounding box coordinates of each face detected in the image. The format of the bounding box coordinates is `[xmin, ymin, width, height]`.
+This repository contains code to instantiate and deploy a facial age estimation model. The model detects faces in an image, extracts facial features for each face detected and finally predicts the age of each face. The model uses a coarse-to-fine strategy to perform multi-class classification and regression for age estimation. The input to the model is an image and the output is a list of estimated ages and bounding box coordinates of each face detected in the image. The format of the bounding box coordinates is `[xmin, ymin, width, height]`, where each coordinate is normalized by the height and width of the image dimension for y and x, respectively. Each coordinate is therefore in the range [0, 1].
 
 The model is based on the [SSR-Net model](https://github.com/shamangary/SSR-Net). The model files are hosted on [IBM Cloud Object Storage](http://max-assets.s3-api.us-geo.objectstorage.softlayer.net/facial-age-estimator.tar.gz). The code in this repository deploys the model as a web service in a Docker container. This repository was developed as part of the [IBM Code Model Asset Exchange](https://developer.ibm.com/code/exchanges/models/).
 
@@ -119,12 +119,12 @@ You should see a JSON response like that below:
     "status": "ok",
     "predictions": [
         {
-            "age_estimation": 48,
+            "age_estimation": 47,
             "face_box": [
-                303,
-                174,
-                379,
-                515
+                0.3079667063020214,
+                0.147,
+                0.6813317479191439,
+                0.562
             ]
         }
     ]
