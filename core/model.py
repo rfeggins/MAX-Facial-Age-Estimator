@@ -100,7 +100,6 @@ class ModelWrapper(MAXModelWrapper):
     def _post_process(self,post_rst):
         predicted_ages=post_rst[0]
         detected=post_rst[1]
-        ratio=post_rst[2]
         pred_res = []
         for i, d in enumerate(detected):
             if d['confidence'] > 0.85:
