@@ -83,7 +83,7 @@ class ModelWrapper(MAXModelWrapper):
                 x2 = x1 + w
                 y2 = y1 + h
                 # Normalized bbx coordinates
-                d['box'] = [float(x1) / img_w, float(y1) / img_h, float(x2) / img_w, float(y2) / img_h]
+                d['box'] = [float(y1) / img_h, float(x1) / img_w, float(y2) / img_h, float(x2) / img_w]
                 xw1 = max(int(x1 - ad * w), 0)
                 yw1 = max(int(y1 - ad * h), 0)
                 xw2 = min(int(x2 + ad * w), img_w - 1)
