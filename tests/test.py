@@ -34,10 +34,10 @@ def _check_response(r):
     json = r.json()
     assert json['status'] == "ok"
     assert 55 > json['predictions'][0]['age_estimation'] > 35
-    assert .35 > json['predictions'][0]['face_box'][0] > .25
-    assert .18 > json['predictions'][0]['face_box'][1] > .12
-    assert .70 > json['predictions'][0]['face_box'][2] > .58
-    assert .60 > json['predictions'][0]['face_box'][3] > .52
+    assert .18 > json['predictions'][0]['detection_box'][1] > .12
+    assert .35 > json['predictions'][0]['detection_box'][0] > .25
+    assert .60 > json['predictions'][0]['detection_box'][3] > .52
+    assert .70 > json['predictions'][0]['detection_box'][2] > .58
 
 
 def test_predict():
