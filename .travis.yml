@@ -10,4 +10,4 @@ install:
 before_script:
   - pip install pytest requests opencv-python numpy Pillow
 script:
-- python -m pytest tests/test.py
+  - pytest tests/test.py
