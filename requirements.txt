@@ -1,5 +1,6 @@
 tensorflow==1.1.0
 pillow
+numpy==1.15.3
 scipy
 keras==2.2.2
 opencv-python
