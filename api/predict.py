@@ -11,7 +11,7 @@ input_parser.add_argument('image', type=FileStorage, location='files', required=
 label_prediction = MAX_API.model('LabelPrediction', {
     'age_estimation': fields.Integer(required=True, description='Estimated age for the face'),
     'detection_box': fields.List(fields.Float(required=True), description='Bounding box coordinates for the face, ' + \
-         'in the form of an array of normalized coordinates [xmin, ymin, xmax, ymax]. Each coordinate is in the range [0, 1]')
+         'in the form of an array of normalized coordinates [ymin, xmin, ymax, xmax]. Each coordinate is in the range [0, 1]')
 })
 
 predict_response = MAX_API.model('ModelPredictResponse', {
