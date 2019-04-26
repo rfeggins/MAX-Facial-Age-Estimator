@@ -1,7 +1,7 @@
 tensorflow==1.1.0
-pillow
+pillow==5.3.0
 numpy==1.15.3
-scipy
+scipy==1.2.1
 keras==2.2.2
-opencv-python
-mtcnn
+opencv-python==3.4.3.18
+mtcnn==0.0.8
