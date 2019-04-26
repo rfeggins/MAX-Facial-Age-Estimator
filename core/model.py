@@ -71,7 +71,7 @@ class ModelWrapper(MAXModelWrapper):
         img_h, img_w, _ = np.shape(input_img)
 
         # check image w/h > 1024
-        input_img =img_resize(input_img)
+        input_img = img_resize(input_img)
 
         img_h, img_w, _ = np.shape(input_img)
         detected = self.detector.detect_faces(input_img)
