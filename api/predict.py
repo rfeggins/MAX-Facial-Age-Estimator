@@ -10,7 +10,8 @@ input_parser.add_argument('image', type=FileStorage, location='files', required=
 
 label_prediction = MAX_API.model('LabelPrediction', {
     'age_estimation': fields.Integer(required=True, description='Estimated age for the face'),
-    'face_box': fields.List(fields.Integer(required=True), description='Bounding box coordinates for the face')
+    'detection_box': fields.List(fields.Float(required=True), description='Bounding box coordinates for the face, ' + \
+         'in the form of an array of normalized coordinates [ymin, xmin, ymax, xmax]. Each coordinate is in the range [0, 1]')
 })
 
 predict_response = MAX_API.model('ModelPredictResponse', {
@@ -36,7 +37,7 @@ class ModelPredictAPI(PredictAPI):
 
         label_preds=[]
         for res in preds:
-            label_preds.append({'age_estimation':res[0]['age'],'face_box':res[0]['box']})
+            label_preds.append({'age_estimation':res[0]['age'],'detection_box':res[0]['box']})
         result['predictions'] = label_preds
         result['status'] = 'ok'
         return result
