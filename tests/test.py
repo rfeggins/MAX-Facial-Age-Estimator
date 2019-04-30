@@ -3,7 +3,6 @@ import requests
 import os
 from PIL import Image
 import numpy as np
-from core.util import img_resize
 
 
 def test_swagger():
