@@ -93,9 +93,11 @@ _Note_ that currently this docker image is CPU only (we will add support for GPU
 
 ### 2. Deploy the Model
 
-To run the docker image, which automatically starts the model serving API, run:
+To pull and run the docker image, which automatically starts the model serving API, run:
 
 ```
+$ docker pull codait/max-facial-age-estimator
+
 $ docker run -it -p 5000:5000 max-facial-age-estimator
 ```
 
